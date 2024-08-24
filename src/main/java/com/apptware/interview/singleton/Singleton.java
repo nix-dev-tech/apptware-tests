@@ -7,6 +7,9 @@ public class Singleton {
   public String s;
 
   private Singleton() {
+    if( single_instance != null ) {
+      throw new InstantiationError( "Creating of this object is not allowed." );
+    }
     s = "Hello I am a string part of Singleton class";
   }
 
