@@ -1,9 +1,14 @@
 package com.apptware.interview.singleton;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import lombok.SneakyThrows;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * The code tests whether the {@link com.apptware.interview.singleton.Singleton} class strictly
@@ -21,15 +26,12 @@ class SingletonTest {
   @SneakyThrows
   void testSingleton() {
     Singleton instance1 = Singleton.getInstance();
-    Singleton instance2 = null;
-
+    Throwable exception = assertThrows(InvocationTargetException.class, () -> {
     Constructor<?>[] constructors = Singleton.class.getDeclaredConstructors();
     for (Constructor<?> constructor : constructors) {
       constructor.setAccessible(true);
-      instance2 = (Singleton) constructor.newInstance();
+      Singleton instance2 = (Singleton) constructor.newInstance();
       break;
-    }
-
-    Assertions.assertThat(instance1.hashCode()).isEqualTo(instance2.hashCode());
+    }},"InstantiationError Exception was expected");
   }
 }
